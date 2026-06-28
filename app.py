@@ -123,12 +123,7 @@ def load_model():
     model_path  = 'knn_heart_model.pkl'
     scaler_path = 'scaler.pkl'
 
-    if os.path.exists(model_path) and os.path.exists(scaler_path):
-        with open(model_path,  'rb') as f: model  = pickle.load(f)
-        with open(scaler_path, 'rb') as f: scaler = pickle.load(f)
-        return model, scaler, None
-
-    # Retrain dari UCI jika pkl tidak ada
+    # Selalu retrain dari UCI agar kompatibel dengan versi sklearn apapun
     url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data'
     COL_NAMES = ['age','sex','cp','trestbps','chol','fbs','restecg',
                  'thalach','exang','oldpeak','slope','ca','thal','target']
@@ -344,7 +339,7 @@ if submitted:
     }])
 
     patient_scaled = patient.copy()
-    patient_scaled[COLS_TO_SCALE] = (patient[COLS_TO_SCALE].values - scaler.mean_) / scaler.scale_
+    patient_scaled[COLS_TO_SCALE] = scaler.transform(patient[COLS_TO_SCALE])
 
     proba = model.predict_proba(patient_scaled)[0][1]
     pred  = int(proba >= 0.5)
