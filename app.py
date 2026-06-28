@@ -92,6 +92,19 @@ st.markdown("""
         padding: 0.65rem 2rem; font-size: 1rem;
         font-weight: 600; width: 100%;
     }
+
+    /* Fix alignment — input boxes sejajar meski label beda panjang */
+    div[data-testid="stNumberInput"],
+    div[data-testid="stSelectbox"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100%;
+    }
+    div[data-testid="column"] {
+        display: flex;
+        flex-direction: column;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -331,7 +344,7 @@ if submitted:
     }])
 
     patient_scaled = patient.copy()
-    patient_scaled[COLS_TO_SCALE] = scaler.transform(patient[COLS_TO_SCALE])
+    patient_scaled[COLS_TO_SCALE] = scaler.transform(patient[COLS_TO_SCALE].values)
 
     proba = model.predict_proba(patient_scaled)[0][1]
     pred  = int(proba >= 0.5)
