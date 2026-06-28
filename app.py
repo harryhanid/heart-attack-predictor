@@ -240,16 +240,16 @@ with st.form("input_form"):
     sex = c2.selectbox("Jenis kelamin", ["Pria", "Wanita"])
 
     st.markdown('<div class="section-title">💊 Hasil Cek Kesehatan (dari dokter/laboratorium)</div>', unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3)
-    trestbps = c1.number_input("Tekanan darah (angka atas, mmHg)", 90, 200, 130,
+    c1, c2, c3 = st.columns(3, vertical_alignment="bottom")
+    trestbps = c1.number_input("Tekanan darah\n(angka atas, mmHg)", 90, 200, 130,
                                 help="Contoh: kalau tekanan darahmu 130/85, isi 130")
     chol     = c2.number_input("Kolesterol (mg/dL)", 100, 600, 200,
                                 help="Didapat dari hasil cek darah di lab. Normal: di bawah 200 mg/dL")
-    thalach  = c3.number_input("Detak jantung maks saat olahraga (bpm)", 70, 210, 150,
+    thalach  = c3.number_input("Detak jantung maks\nsaat olahraga (bpm)", 70, 210, 150,
                                 help="Biasanya diukur saat tes treadmill di klinik")
 
-    c1, c2 = st.columns(2)
-    fbs = c1.selectbox("Gula darah puasa kamu tinggi?",
+    c1, c2 = st.columns(2, vertical_alignment="bottom")
+    fbs = c1.selectbox("Gula darah puasa tinggi?",
                         ["Tidak — di bawah 120 mg/dL", "Ya — di atas 120 mg/dL"],
                         help="Cek dari hasil lab gula darah puasa")
     oldpeak = c2.number_input("Nilai ST Depression (dari hasil EKG)", 0.0, 7.0, 1.0, step=0.1,
@@ -272,18 +272,18 @@ with st.form("input_form"):
     st.info("💡 Bagian ini diisi dari hasil pemeriksaan dokter spesialis jantung. "
             "Kalau belum pernah periksa, pilih opsi pertama di setiap pertanyaan.")
 
-    c1, c2, c3 = st.columns(3)
-    restecg = c1.selectbox("Hasil rekam jantung (EKG) saat istirahat", [
+    c1, c2, c3 = st.columns(3, vertical_alignment="bottom")
+    restecg = c1.selectbox("Hasil rekam jantung (EKG)\nsaat istirahat", [
         "Normal",
         "Ada kelainan ringan (ST-T abnormal)",
         "Jantung membesar (LV Hypertrophy)"
     ])
-    slope = c2.selectbox("Pola grafik EKG saat tes olahraga", [
+    slope = c2.selectbox("Pola grafik EKG\nsaat tes olahraga", [
         "Naik (Upsloping) — normal",
         "Datar (Flat) — perlu perhatian",
         "Turun (Downsloping) — perlu waspada ⚠️"
     ])
-    ca = c3.selectbox("Berapa pembuluh jantung yang tersumbat? (dari hasil kateterisasi)",
+    ca = c3.selectbox("Pembuluh jantung tersumbat?\n(dari hasil kateterisasi)",
                        ["0 — Tidak ada", "1 — Satu pembuluh", "2 — Dua pembuluh", "3 — Tiga pembuluh"],
                        help="Didapat dari pemeriksaan kateterisasi jantung / fluoroskopi")
 
@@ -344,7 +344,7 @@ if submitted:
     }])
 
     patient_scaled = patient.copy()
-    patient_scaled[COLS_TO_SCALE] = scaler.transform(patient[COLS_TO_SCALE].values)
+    patient_scaled[COLS_TO_SCALE] = (patient[COLS_TO_SCALE].values - scaler.mean_) / scaler.scale_
 
     proba = model.predict_proba(patient_scaled)[0][1]
     pred  = int(proba >= 0.5)
